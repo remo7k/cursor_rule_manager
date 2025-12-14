@@ -181,6 +181,14 @@ function createManagerStore() {
     vscodeApi.postMessage({ type: "scrapeDocs", sourceId, location });
   }
 
+  function scrapeCustomUrl(
+    url: string,
+    name: string,
+    location: "global" | "project",
+  ) {
+    vscodeApi.postMessage({ type: "scrapeCustomUrl", url, name, location });
+  }
+
   return {
     subscribe,
     init,
@@ -196,6 +204,7 @@ function createManagerStore() {
     deleteFolder,
     updateRule,
     scrapeDocs,
+    scrapeCustomUrl,
   };
 }
 

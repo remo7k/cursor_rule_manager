@@ -26,14 +26,39 @@
   let selectedSource: string = "";
   let selectedLocation: "global" | "project" = "project";
   let showDownloadForm = false;
+  let downloadMode: "preset" | "custom" = "preset";
+  let customUrl: string = "";
+  let customName: string = "";
 
   function handleScrape() {
     if (!selectedSource) return;
     manager.scrapeDocs(selectedSource, selectedLocation);
   }
 
+  function handleCustomScrape() {
+    if (!customUrl || !customName) return;
+    manager.scrapeCustomUrl(customUrl, customName, selectedLocation);
+  }
+
   function getSelectedSourceName(): string {
+    if (downloadMode === "custom") return customName || "docs";
     return sources.find((s) => s.id === selectedSource)?.name ?? "docs";
+  }
+
+  // Auto-derive name from GitHub URL
+  function deriveNameFromUrl(url: string): string {
+    // Try to extract the last folder name from the path
+    const match = url.match(/github\.com\/[^\/]+\/[^\/]+\/tree\/[^\/]+\/(.+)/);
+    if (match) {
+      const path = match[1].replace(/\/$/, "");
+      const lastFolder = path.split("/").pop() || "";
+      return lastFolder.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+    return "";
+  }
+
+  $: if (customUrl && !customName) {
+    customName = deriveNameFromUrl(customUrl);
   }
 
   // Filter folders that are documentation (folder name matches a source ID)
@@ -105,21 +130,68 @@
         </div>
       {:else}
         <!-- Download form -->
-        <div class="form-row">
-          <select bind:value={selectedSource} class="form-select">
-            <option value="">Select source...</option>
-            {#each sources as source (source.id)}
-              <option value={source.id}>{source.name}</option>
-            {/each}
-          </select>
-          <select bind:value={selectedLocation} class="form-select form-select--small">
-            <option value="project">Project</option>
-            <option value="global">Global</option>
-          </select>
-          <button class="download-btn" on:click={handleScrape} disabled={!selectedSource}>
-            ↓
+        <div class="mode-tabs">
+          <button
+            class="mode-tab"
+            class:active={downloadMode === "preset"}
+            on:click={() => (downloadMode = "preset")}
+          >
+            Presets
+          </button>
+          <button
+            class="mode-tab"
+            class:active={downloadMode === "custom"}
+            on:click={() => (downloadMode = "custom")}
+          >
+            Custom URL
           </button>
         </div>
+
+        {#if downloadMode === "preset"}
+          <div class="form-row">
+            <select bind:value={selectedSource} class="form-select">
+              <option value="">Select source...</option>
+              {#each sources as source (source.id)}
+                <option value={source.id}>{source.name}</option>
+              {/each}
+            </select>
+            <select bind:value={selectedLocation} class="form-select form-select--small">
+              <option value="project">Project</option>
+              <option value="global">Global</option>
+            </select>
+            <button class="download-btn" on:click={handleScrape} disabled={!selectedSource}>
+              ↓
+            </button>
+          </div>
+        {:else}
+          <div class="custom-form">
+            <input
+              type="text"
+              bind:value={customUrl}
+              placeholder="https://github.com/owner/repo/tree/main/docs"
+              class="form-input"
+            />
+            <div class="form-row">
+              <input
+                type="text"
+                bind:value={customName}
+                placeholder="Name (e.g. My Docs)"
+                class="form-input"
+              />
+              <select bind:value={selectedLocation} class="form-select form-select--small">
+                <option value="project">Project</option>
+                <option value="global">Global</option>
+              </select>
+              <button
+                class="download-btn"
+                on:click={handleCustomScrape}
+                disabled={!customUrl || !customName}
+              >
+                ↓
+              </button>
+            </div>
+          </div>
+        {/if}
       {/if}
     </div>
   {/if}
@@ -209,6 +281,62 @@
   .download-panel.is-scraping {
     background: rgba(59, 130, 246, 0.08);
     border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .mode-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .mode-tab {
+    flex: 1;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 4px;
+    color: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 150ms ease;
+  }
+
+  .mode-tab:hover {
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .mode-tab.active {
+    opacity: 1;
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+  }
+
+  .custom-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 6px 8px;
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border, rgba(255, 255, 255, 0.1));
+    border-radius: 4px;
+    color: var(--vscode-input-foreground);
+    font-size: 11px;
+    box-sizing: border-box;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--vscode-focusBorder);
+  }
+
+  .form-input::placeholder {
+    opacity: 0.5;
   }
 
   .form-row {

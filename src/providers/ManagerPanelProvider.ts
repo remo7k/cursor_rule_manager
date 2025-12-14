@@ -111,6 +111,14 @@ export class ManagerPanelProvider {
           case "scrapeDocs":
             await this._scrapeDocs(message.sourceId, message.location);
             break;
+
+          case "scrapeCustomUrl":
+            await this._scrapeCustomUrl(
+              message.url,
+              message.name,
+              message.location,
+            );
+            break;
         }
       },
       null,
@@ -544,6 +552,61 @@ Add your rule content here.
     try {
       const results = await this.docsScraperService.scrapeSource(
         sourceId,
+        location,
+        workspaceFolder?.uri,
+        (progress) => {
+          this._panel.webview.postMessage({
+            type: "scrapeProgress",
+            ...progress,
+          });
+        },
+      );
+
+      const successful = results.filter((r) => r.success).length;
+      const failed = results.filter((r) => !r.success);
+
+      this._panel.webview.postMessage({
+        type: "scrapeComplete",
+        successful,
+        failed: failed.length,
+        errors: failed.map((f) => ({ name: f.outputName, error: f.error })),
+      });
+
+      // Refresh data to show new rules
+      await this._sendUpdatedData();
+    } catch (error) {
+      this._panel.webview.postMessage({
+        type: "scrapeError",
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  private async _scrapeCustomUrl(
+    url: string,
+    name: string,
+    location: StorageLocation,
+  ) {
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+
+    if (location === "project" && !workspaceFolder) {
+      this._panel.webview.postMessage({
+        type: "scrapeError",
+        message: "No workspace folder open for project storage",
+      });
+      return;
+    }
+
+    // Notify webview that scraping started
+    this._panel.webview.postMessage({
+      type: "scrapeStarted",
+      sourceId: name,
+    });
+
+    try {
+      const results = await this.docsScraperService.scrapeCustomUrl(
+        url,
+        name,
         location,
         workspaceFolder?.uri,
         (progress) => {

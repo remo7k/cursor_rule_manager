@@ -76,7 +76,7 @@
   <div class="metadata-grid">
     <!-- Description -->
     <div class="metadata-row">
-      <span class="metadata-label">📝 Description</span>
+      <span class="metadata-label">Description</span>
       <input
         type="text"
         class="metadata-input"
@@ -89,7 +89,7 @@
 
     <!-- Globs -->
     <div class="metadata-row">
-      <span class="metadata-label">📁 Globs</span>
+      <span class="metadata-label">Globs</span>
       <div class="glob-container">
         {#each globs as glob}
           <span class="glob-chip">
@@ -110,7 +110,7 @@
 
     <!-- Always Apply -->
     <div class="metadata-row">
-      <span class="metadata-label">⚡ Always Apply</span>
+      <span class="metadata-label">Always Apply</span>
       <button
         class="toggle-switch"
         class:toggle-switch--active={alwaysApply}
@@ -201,7 +201,6 @@
     gap: 4px;
     padding: 3px 6px 3px 8px;
     font-size: 11px;
-    font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
     background: rgba(59, 130, 246, 0.12);
     color: #93c5fd;
     border-radius: 3px;
@@ -237,7 +236,6 @@
     max-width: 140px;
     padding: 4px 8px;
     font-size: 11px;
-    font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
     background: transparent;
     border: 1px dashed rgba(255, 255, 255, 0.15);
     border-radius: 3px;
@@ -298,8 +296,6 @@
 
   .toggle-text {
     font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
     letter-spacing: 0.3px;
     opacity: 0.6;
   }

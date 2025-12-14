@@ -127,7 +127,7 @@
           onSelectRule={handleSelectRule}
           onAddRule={() => handleAddRootRule("global")}
           onDeleteRule={handleDeleteRule}
-          initialExpanded={true}
+          initialExpanded={false}
         />
       </div>
 

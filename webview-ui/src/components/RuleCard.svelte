@@ -69,15 +69,16 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 6px 10px;
-    margin-bottom: 2px;
+    padding: 5px 8px;
+    margin: 2px 0;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     transition: all 150ms ease;
     text-align: left;
     color: inherit;
+    height: auto;
   }
 
   .rule-card:hover {
@@ -97,6 +98,7 @@
   .rule-name {
     flex: 1;
     font-size: 12px;
+    line-height: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -105,9 +107,11 @@
   .rule-actions {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     opacity: 0;
     transition: opacity 150ms ease;
+    top: -4px;
+    position: relative;
   }
 
   .rule-card:hover .rule-actions {
@@ -116,14 +120,13 @@
 
   .toggle {
     position: relative;
-    width: 28px;
-    height: 16px;
-    border-radius: 8px;
+    width: 26px;
+    height: 14px;
+    border-radius: 7px;
     background: rgba(255, 255, 255, 0.1);
     border: none;
     cursor: pointer;
     transition: background-color 150ms ease;
-    flex-shrink: 0;
   }
 
   .toggle:hover {
@@ -138,8 +141,8 @@
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--vscode-foreground);
     transition: transform 150ms ease;
@@ -154,8 +157,8 @@
   }
 
   .menu-btn {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -95,6 +95,10 @@ export class ManagerPanelProvider {
           case "deleteFolder":
             await this._deleteFolder(message.folderPath);
             break;
+
+          case "updateRule":
+            await this._updateRule(message.rulePath, message.content);
+            break;
         }
       },
       null,
@@ -449,6 +453,17 @@ Add your rule content here.
       await this._sendUpdatedData();
     } catch (error) {
       vscode.window.showErrorMessage(`Failed to delete folder: ${error}`);
+    }
+  }
+
+  private async _updateRule(rulePath: string, content: string) {
+    try {
+      await this.rulesService.updateRule(rulePath, content);
+    } catch (error) {
+      this._panel.webview.postMessage({
+        type: "error",
+        message: `Failed to update rule: ${error}`,
+      });
     }
   }
 

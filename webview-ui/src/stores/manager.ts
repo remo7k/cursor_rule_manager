@@ -105,6 +105,21 @@ function createManagerStore() {
     vscodeApi.postMessage({ type: "deleteFolder", folderPath });
   }
 
+  function updateRule(rulePath: string, content: string) {
+    vscodeApi.postMessage({ type: "updateRule", rulePath, content });
+
+    // Optimistically update the selected rule's content
+    update((state) => {
+      if (state.selectedRule?.path === rulePath) {
+        return {
+          ...state,
+          selectedRule: { ...state.selectedRule, content },
+        };
+      }
+      return state;
+    });
+  }
+
   return {
     subscribe,
     init,
@@ -118,6 +133,7 @@ function createManagerStore() {
     deleteRule,
     createFolder,
     deleteFolder,
+    updateRule,
   };
 }
 

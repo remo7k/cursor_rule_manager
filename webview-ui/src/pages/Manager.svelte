@@ -47,6 +47,10 @@
     // Delegate input to extension's showInputBox
     manager.createFolder(source);
   }
+
+  function handleRuleUpdate(path: string, content: string) {
+    manager.updateRule(path, content);
+  }
 </script>
 
 <div class="manager-container">
@@ -145,7 +149,11 @@
 
   <div class="manager-content">
     {#if selectedRule}
-      <RulePreview rule={selectedRule} onOpenFile={manager.openFile} />
+      <RulePreview
+        rule={selectedRule}
+        onOpenFile={manager.openFile}
+        onRuleUpdate={handleRuleUpdate}
+      />
     {:else}
       <div class="no-selection">
         <p>Select a rule to preview</p>

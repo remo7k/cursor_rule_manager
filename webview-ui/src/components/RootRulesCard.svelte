@@ -67,8 +67,9 @@
         <button class="menu-btn" on:click={handleMenuToggle} title="More actions"> ⋯ </button>
 
         {#if menuOpen}
-          <div class="menu-dropdown" on:click|stopPropagation>
-            <button class="menu-item" on:click={handleAdd}>+ Add Rule</button>
+          <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+          <div class="menu-dropdown" on:click|stopPropagation role="menu" tabindex="-1">
+            <button class="menu-item" on:click={handleAdd} role="menuitem">+ Add Rule</button>
           </div>
         {/if}
       </div>

@@ -2,12 +2,27 @@ import { writable, derived } from "svelte/store";
 import { vscodeApi } from "../utils/vscodeApi";
 import type { RulesData, RuleFile, Config } from "./vscode";
 
+export interface DocsSource {
+  id: string;
+  name: string;
+  repo: string;
+}
+
+export interface ScrapeProgress {
+  current: number;
+  total: number;
+  currentPage: string;
+}
+
 export interface ManagerState {
   projectData: RulesData;
   globalData: RulesData;
   config: Config;
   selectedRule: RuleFile | null;
   loading: boolean;
+  docsSources: DocsSource[];
+  scraping: boolean;
+  scrapeProgress: ScrapeProgress | null;
 }
 
 const emptyRulesData: RulesData = {
@@ -23,10 +38,14 @@ function createManagerStore() {
     config: { enabledDocs: [], enabledRules: [] },
     selectedRule: null,
     loading: true,
+    docsSources: [],
+    scraping: false,
+    scrapeProgress: null,
   });
 
   function init() {
     vscodeApi.postMessage({ type: "getInitialData" });
+    vscodeApi.postMessage({ type: "getDocsSources" });
 
     window.addEventListener("message", (event) => {
       const message = event.data;
@@ -60,6 +79,44 @@ function createManagerStore() {
         case "error":
           console.error("Extension error:", message.message);
           update((state) => ({ ...state, loading: false }));
+          break;
+        case "docsSources":
+          update((state) => ({
+            ...state,
+            docsSources: message.sources,
+          }));
+          break;
+        case "scrapeStarted":
+          update((state) => ({
+            ...state,
+            scraping: true,
+            scrapeProgress: null,
+          }));
+          break;
+        case "scrapeProgress":
+          update((state) => ({
+            ...state,
+            scrapeProgress: {
+              current: message.current,
+              total: message.total,
+              currentPage: message.currentPage,
+            },
+          }));
+          break;
+        case "scrapeComplete":
+          update((state) => ({
+            ...state,
+            scraping: false,
+            scrapeProgress: null,
+          }));
+          break;
+        case "scrapeError":
+          console.error("Scrape error:", message.message);
+          update((state) => ({
+            ...state,
+            scraping: false,
+            scrapeProgress: null,
+          }));
           break;
       }
     });
@@ -120,6 +177,10 @@ function createManagerStore() {
     });
   }
 
+  function scrapeDocs(sourceId: string, location: "global" | "project") {
+    vscodeApi.postMessage({ type: "scrapeDocs", sourceId, location });
+  }
+
   return {
     subscribe,
     init,
@@ -134,6 +195,7 @@ function createManagerStore() {
     createFolder,
     deleteFolder,
     updateRule,
+    scrapeDocs,
   };
 }
 

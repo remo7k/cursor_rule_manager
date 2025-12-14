@@ -4,10 +4,21 @@
   import FolderCard from "../components/FolderCard.svelte";
   import RootRulesCard from "../components/RootRulesCard.svelte";
   import RulePreview from "../components/RulePreview.svelte";
+  import DocsSection from "../components/DocsSection.svelte";
 
   $: projectData = $manager.projectData;
   $: globalData = $manager.globalData;
   $: selectedRule = $manager.selectedRule;
+  $: docsSources = $manager.docsSources;
+  $: scraping = $manager.scraping;
+  $: scrapeProgress = $manager.scrapeProgress;
+
+  // Filter out docs folders from regular rules sections (folder name matches a source ID)
+  $: docsSourceIds = new Set(docsSources.map((s) => s.id.toLowerCase()));
+  $: globalRuleFolders = globalData.folders.filter((f) => !docsSourceIds.has(f.name.toLowerCase()));
+  $: projectRuleFolders = projectData.folders.filter(
+    (f) => !docsSourceIds.has(f.name.toLowerCase())
+  );
 
   function handleToggleRule(ruleId: string, enabled: boolean) {
     manager.toggleRule(ruleId, enabled);
@@ -61,6 +72,23 @@
     </div>
 
     <div class="rules-list">
+      <!-- Docs Section -->
+      <DocsSection
+        sources={docsSources}
+        {scraping}
+        {scrapeProgress}
+        globalFolders={globalData.folders}
+        projectFolders={projectData.folders}
+        enabledRuleIds={$enabledRuleIds}
+        selectedRuleId={selectedRule?.id ?? null}
+        onSelectRule={handleSelectRule}
+        onToggleRule={handleToggleRule}
+        onDeleteRule={handleDeleteRule}
+        onToggleFolder={handleToggleFolder}
+        onDeleteFolder={handleDeleteFolder}
+        onAddRule={handleAddRule}
+      />
+
       <!-- Global Rules -->
       <div class="rules-section">
         <div class="section-header">
@@ -74,7 +102,7 @@
           </button>
         </div>
 
-        {#each globalData.folders as folder (folder.id)}
+        {#each globalRuleFolders as folder (folder.id)}
           <FolderCard
             {folder}
             enabledRuleIds={$enabledRuleIds}
@@ -116,7 +144,7 @@
           </button>
         </div>
 
-        {#each projectData.folders as folder (folder.id)}
+        {#each projectRuleFolders as folder (folder.id)}
           <FolderCard
             {folder}
             enabledRuleIds={$enabledRuleIds}

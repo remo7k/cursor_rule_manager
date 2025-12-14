@@ -53,6 +53,16 @@
         "command": "ruleManager.openManager",
         "title": "Open Rule Manager",
         "icon": "$(file-directory)"
+      },
+      {
+        "command": "ruleManager.scrapeDocs",
+        "title": "Scrape Documentation",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "ruleManager.loginGitHub",
+        "title": "Rule Manager: Login to GitHub",
+        "icon": "$(github)"
       }
     ]
   },
@@ -71,9 +81,13 @@
     "package": "npm run build && vsce package",
     "clean": "rm -rf out webview-ui/dist node_modules webview-ui/node_modules bun.lockb webview-ui/bun.lockb"
   },
+  "dependencies": {
+    "turndown": "^7.2.0"
+  },
   "devDependencies": {
     "@types/bun": "^1.1.14",
     "@types/node": "^20.10.0",
+    "@types/turndown": "^5.0.5",
     "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",

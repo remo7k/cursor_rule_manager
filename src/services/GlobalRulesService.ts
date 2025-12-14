@@ -66,8 +66,8 @@ export class GlobalRulesService {
       // Process subdirectories
       for (const [name] of subdirs) {
         const folderUri = vscode.Uri.joinPath(dirUri, name);
-        const folder = await this.scanFolder(folderUri, name);
-        if (folder) {
+        const folder = await this.scanFolder(folderUri, name, data);
+        if (folder && folder.rules.length > 0) {
           data.folders.push(folder);
         }
       }
@@ -79,6 +79,7 @@ export class GlobalRulesService {
   private async scanFolder(
     folderUri: vscode.Uri,
     folderName: string,
+    data: RulesData,
   ): Promise<RuleFolder | null> {
     try {
       const entries = await vscode.workspace.fs.readDirectory(folderUri);
@@ -105,6 +106,18 @@ export class GlobalRulesService {
             folder.rules.push(file);
           } else {
             folder.otherFiles.push(file);
+          }
+        } else if (type === vscode.FileType.Directory) {
+          // Recursively scan subdirectories
+          const subFolderUri = vscode.Uri.joinPath(folderUri, name);
+          const subFolderName = `${folderName}/${name}`;
+          const subFolder = await this.scanFolder(
+            subFolderUri,
+            subFolderName,
+            data,
+          );
+          if (subFolder && subFolder.rules.length > 0) {
+            data.folders.push(subFolder);
           }
         }
       }

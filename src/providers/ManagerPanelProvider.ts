@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 import { RulesService } from "../services/RulesService";
 import { GlobalRulesService } from "../services/GlobalRulesService";
 import { ConfigService } from "../services/ConfigService";
+import { DocsScraperService } from "../services/DocsScraperService";
+import type { StorageLocation } from "../scrapers/types";
 
 export class ManagerPanelProvider {
   public static currentPanel: ManagerPanelProvider | undefined;
@@ -12,6 +14,7 @@ export class ManagerPanelProvider {
   private rulesService: RulesService;
   private globalRulesService: GlobalRulesService;
   private configService: ConfigService;
+  private docsScraperService: DocsScraperService;
 
   public static createOrShow(extensionUri: vscode.Uri) {
     const column = vscode.window.activeTextEditor
@@ -48,6 +51,7 @@ export class ManagerPanelProvider {
     this.rulesService = new RulesService();
     this.globalRulesService = new GlobalRulesService();
     this.configService = new ConfigService();
+    this.docsScraperService = new DocsScraperService();
 
     // Set HTML content
     this._panel.webview.html = this._getHtmlForWebview(this._panel.webview);
@@ -98,6 +102,14 @@ export class ManagerPanelProvider {
 
           case "updateRule":
             await this._updateRule(message.rulePath, message.content);
+            break;
+
+          case "getDocsSources":
+            await this._sendDocsSources();
+            break;
+
+          case "scrapeDocs":
+            await this._scrapeDocs(message.sourceId, message.location);
             break;
         }
       },
@@ -486,6 +498,78 @@ Add your rule content here.
       this._panel.webview.postMessage({
         type: "error",
         message: `Failed to refresh data: ${error}`,
+      });
+    }
+  }
+
+  private async _sendDocsSources() {
+    const sources = this.docsScraperService.getAvailableSources().map((s) => ({
+      id: s.id,
+      name: s.name,
+      repo: `${s.owner}/${s.repo}`,
+    }));
+
+    this._panel.webview.postMessage({
+      type: "docsSources",
+      sources,
+    });
+  }
+
+  private async _scrapeDocs(sourceId: string, location: StorageLocation) {
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+
+    if (location === "project" && !workspaceFolder) {
+      this._panel.webview.postMessage({
+        type: "scrapeError",
+        message: "No workspace folder open for project storage",
+      });
+      return;
+    }
+
+    const source = this.docsScraperService.getSource(sourceId);
+    if (!source) {
+      this._panel.webview.postMessage({
+        type: "scrapeError",
+        message: `Unknown source: ${sourceId}`,
+      });
+      return;
+    }
+
+    // Notify webview that scraping started
+    this._panel.webview.postMessage({
+      type: "scrapeStarted",
+      sourceId,
+    });
+
+    try {
+      const results = await this.docsScraperService.scrapeSource(
+        sourceId,
+        location,
+        workspaceFolder?.uri,
+        (progress) => {
+          this._panel.webview.postMessage({
+            type: "scrapeProgress",
+            ...progress,
+          });
+        },
+      );
+
+      const successful = results.filter((r) => r.success).length;
+      const failed = results.filter((r) => !r.success);
+
+      this._panel.webview.postMessage({
+        type: "scrapeComplete",
+        successful,
+        failed: failed.length,
+        errors: failed.map((f) => ({ name: f.outputName, error: f.error })),
+      });
+
+      // Refresh data to show new rules
+      await this._sendUpdatedData();
+    } catch (error) {
+      this._panel.webview.postMessage({
+        type: "scrapeError",
+        message: error instanceof Error ? error.message : String(error),
       });
     }
   }

@@ -38,10 +38,6 @@ const IGNORED_FILES = [
 ];
 
 export class RulesService {
-  private getCursorDir(workspaceUri: vscode.Uri): vscode.Uri {
-    return vscode.Uri.joinPath(workspaceUri, ".cursor");
-  }
-
   private getRulesDir(workspaceUri: vscode.Uri): vscode.Uri {
     return vscode.Uri.joinPath(workspaceUri, ".cursor", "rules");
   }
@@ -130,8 +126,8 @@ export class RulesService {
       // Process subdirectories as folders
       for (const [name] of subdirs) {
         const folderUri = vscode.Uri.joinPath(dirUri, name);
-        const folder = await this.scanFolder(folderUri, name, source);
-        if (folder) {
+        const folder = await this.scanFolder(folderUri, name, source, data);
+        if (folder && folder.rules.length > 0) {
           data.folders.push(folder);
         }
       }
@@ -144,6 +140,7 @@ export class RulesService {
     folderUri: vscode.Uri,
     folderName: string,
     source: "project" | "global",
+    data: RulesData,
   ): Promise<RuleFolder | null> {
     try {
       const entries = await vscode.workspace.fs.readDirectory(folderUri);
@@ -175,6 +172,19 @@ export class RulesService {
             folder.rules.push(file);
           } else {
             folder.otherFiles.push(file);
+          }
+        } else if (type === vscode.FileType.Directory) {
+          // Recursively scan subdirectories
+          const subFolderUri = vscode.Uri.joinPath(folderUri, name);
+          const subFolderName = `${folderName}/${name}`;
+          const subFolder = await this.scanFolder(
+            subFolderUri,
+            subFolderName,
+            source,
+            data,
+          );
+          if (subFolder && subFolder.rules.length > 0) {
+            data.folders.push(subFolder);
           }
         }
       }

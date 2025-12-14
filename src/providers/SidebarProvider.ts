@@ -47,6 +47,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         case "openFile":
           await this._openFile(message.path);
           break;
+
+        case "openManager":
+          await vscode.commands.executeCommand("ruleManager.openManager");
+          break;
       }
     });
   }

@@ -9,8 +9,7 @@
     "typecheck": "svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
-    "bytemd": "^1.21.0",
-    "@bytemd/plugin-gfm": "^1.21.0"
+    "svelte-markdown": "^0.4.1"
   },
   "devDependencies": {
     "@types/bun": "^1.1.14",

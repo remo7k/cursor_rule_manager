@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { SidebarProvider } from "./providers/SidebarProvider";
+import { ManagerPanelProvider } from "./providers/ManagerPanelProvider";
 import { generateCursorRules } from "./utils/generator";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -36,6 +37,13 @@ export function activate(context: vscode.ExtensionContext) {
           `Failed to generate .cursorrules: ${error}`,
         );
       }
+    }),
+  );
+
+  // Register open manager command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("ruleManager.openManager", () => {
+      ManagerPanelProvider.createOrShow(context.extensionUri);
     }),
   );
 }

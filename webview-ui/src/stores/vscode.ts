@@ -1,4 +1,5 @@
 import { writable, derived } from "svelte/store";
+import { vscodeApi } from "../utils/vscodeApi";
 
 // Types for files and folders
 export interface RuleFile {
@@ -52,15 +53,6 @@ const emptyRulesData: RulesData = {
   rootOtherFiles: [],
 };
 
-// VS Code API singleton
-declare function acquireVsCodeApi(): {
-  postMessage: (message: unknown) => void;
-  getState: () => unknown;
-  setState: (state: unknown) => void;
-};
-
-const vscodeApi = acquireVsCodeApi();
-
 // Create the main store
 function createVSCodeStore() {
   const { subscribe, set, update } = writable<AppState>({
@@ -98,6 +90,7 @@ function createVSCodeStore() {
     generate: () => vscodeApi.postMessage({ type: "generate" }),
     openFile: (path: string) =>
       vscodeApi.postMessage({ type: "openFile", path }),
+    openManager: () => vscodeApi.postMessage({ type: "openManager" }),
   };
 }
 

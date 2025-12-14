@@ -46,6 +46,7 @@ async function buildJS(): Promise<void> {
       minify: !isWatch,
       format: "esm",
       target: "es2020",
+      conditions: ["svelte", "browser"],
       define: {
         "process.env.NODE_ENV": isWatch ? '"development"' : '"production"',
       },

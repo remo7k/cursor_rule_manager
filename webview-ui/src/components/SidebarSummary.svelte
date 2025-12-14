@@ -6,6 +6,7 @@
   export let config: Config;
   export let onGenerate: () => void;
   export let onOpenFile: (path: string) => void;
+  export let onManageRules: () => void;
 
   $: projectFolders = projectData.folders.length;
   $: globalFolders = globalData.folders.length;
@@ -85,7 +86,8 @@
 
   <!-- Actions -->
   <div class="actions">
-    <button class="btn" on:click={onGenerate}> Generate .cursorrules </button>
+    <button class="btn" on:click={onManageRules}> Manage Rules </button>
+    <button class="btn btn-secondary" on:click={onGenerate}> Generate .cursorrules </button>
   </div>
 
   <!-- Recent Rules -->

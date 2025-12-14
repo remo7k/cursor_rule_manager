@@ -1,0 +1,21 @@
+# Build outputs
+out/
+webview-ui/dist/
+
+# Dependencies
+node_modules/
+
+# Bun
+bun.lockb
+
+# Package
+*.vsix
+
+# IDE
+.vscode-test/
+
+# OS
+.DS_Store
+
+# Logs
+*.log

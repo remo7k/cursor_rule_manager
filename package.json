@@ -1,0 +1,87 @@
+{
+  "name": "cursor-rule-manager",
+  "displayName": "Cursor Rule Manager",
+  "description": "Manage documentation and rules for Cursor AI - view, create, and organize rules from all sources",
+  "version": "0.1.0",
+  "publisher": "o7k",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/o7k/rule-manager"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rule-manager",
+          "title": "Rule Manager",
+          "icon": "$(law)"
+        }
+      ]
+    },
+    "views": {
+      "rule-manager": [
+        {
+          "type": "webview",
+          "id": "ruleManager.sidebar",
+          "name": "Rule Manager"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "ruleManager.refresh",
+        "title": "Refresh Rules",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "ruleManager.generate",
+        "title": "Generate .cursorrules",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "ruleManager.openManager",
+        "title": "Open Rule Manager",
+        "icon": "$(file-directory)"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "npm run build:extension && npm run build:webview",
+    "build:extension": "node esbuild.js",
+    "build:webview": "cd webview-ui && ~/.bun/bin/bun run build.ts",
+    "watch": "concurrently \"npm run watch:extension\" \"npm run watch:webview\"",
+    "watch:extension": "node esbuild.js --watch",
+    "watch:webview": "cd webview-ui && ~/.bun/bin/bun run build.ts --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"webview-ui/src/**/*.{ts,svelte,css}\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"webview-ui/src/**/*.{ts,svelte,css}\"",
+    "package": "npm run build && vsce package",
+    "clean": "rm -rf out webview-ui/dist node_modules webview-ui/node_modules bun.lockb webview-ui/bun.lockb"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.19.8",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.2"
+  }
+}

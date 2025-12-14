@@ -1,0 +1,792 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles with good defaults */
+:root {
+  --radius: 4px;
+  --transition: 150ms ease;
+  font-family: var(--vscode-font-family, system-ui, -apple-system, sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+  line-height: 1.5;
+  color: var(--vscode-foreground);
+  background-color: var(--vscode-editor-background);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: 2px;
+}
+
+/* Scrollbar - minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+/* ================================
+   BUTTONS - Flat, accessible
+   ================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition), opacity var(--transition);
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+
+.btn:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+.btn:active {
+  opacity: 0.9;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--vscode-foreground);
+  border: 1px solid var(--vscode-input-border, rgba(255,255,255,0.1));
+}
+
+.btn-secondary:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--vscode-foreground);
+  padding: 6px 10px;
+}
+
+.btn-ghost:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+
+/* ================================
+   TOGGLE - Accessible switch
+   ================================ */
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background-color var(--transition);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+}
+
+.toggle:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.toggle.active {
+  background-color: var(--vscode-button-background);
+}
+
+.toggle-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--vscode-foreground);
+  transition: transform var(--transition);
+  left: 2px;
+}
+
+.toggle.active .toggle-dot {
+  transform: translateX(14px);
+}
+
+/* ================================
+   CARDS - Flat, minimal
+   ================================ */
+.card {
+  padding: 12px;
+  border-radius: var(--radius);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color var(--transition);
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.card + .card {
+  margin-top: 8px;
+}
+
+/* ================================
+   BADGES - Simple, readable
+   ================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-primary {
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+
+.badge-success {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.badge-muted {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--vscode-foreground);
+  opacity: 0.7;
+}
+
+/* ================================
+   FOLDER NAVIGATION - Clean list
+   ================================ */
+.nav-section {
+  padding: 8px 0;
+}
+
+.nav-header {
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.5;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  transition: background-color var(--transition);
+  border-left: 2px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--vscode-button-background);
+}
+
+.nav-item-icon {
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+.nav-item-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-item-count {
+  font-size: 11px;
+  opacity: 0.5;
+  min-width: 20px;
+  text-align: right;
+}
+
+/* ================================
+   RULE CARD - Clean, scannable
+   ================================ */
+.rule-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius);
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: border-color var(--transition);
+}
+
+.rule-card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rule-card + .rule-card {
+  margin-top: 6px;
+}
+
+.rule-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.rule-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rule-name {
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.rule-ext {
+  font-size: 11px;
+  opacity: 0.4;
+}
+
+.rule-preview {
+  font-size: 12px;
+  opacity: 0.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rule-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.rule-action {
+  font-size: 12px;
+  color: var(--vscode-foreground);
+  opacity: 0.6;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity var(--transition);
+}
+
+.rule-action:hover {
+  opacity: 1;
+}
+
+.rule-action--danger {
+  color: #f87171;
+}
+
+/* ================================
+   SIDEBAR SUMMARY - Stats
+   ================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.stat-box {
+  padding: 12px;
+  text-align: center;
+  border-radius: var(--radius);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-box--large {
+  grid-column: span 2;
+  padding: 16px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.stat-value--small {
+  font-size: 18px;
+}
+
+.stat-label {
+  font-size: 11px;
+  opacity: 0.5;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Recent rules list */
+.recent-list {
+  margin-top: 16px;
+}
+
+.recent-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--transition);
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: var(--vscode-foreground);
+}
+
+.recent-item:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.recent-item + .recent-item {
+  margin-top: 2px;
+}
+
+.recent-name {
+  font-size: 12px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-folder {
+  font-size: 10px;
+  opacity: 0.4;
+  margin-left: 8px;
+}
+
+/* Status indicator */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  margin-top: 16px;
+  border-radius: var(--radius);
+  background-color: rgba(34, 197, 94, 0.08);
+  font-size: 12px;
+}
+
+.status-icon {
+  color: #4ade80;
+  margin-right: 6px;
+}
+
+/* ================================
+   MODAL - Clean overlay
+   ================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+  border-radius: 6px;
+  background-color: var(--vscode-editor-background);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.modal-body {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 16px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ================================
+   FORM ELEMENTS
+   ================================ */
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: var(--radius);
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color var(--transition);
+}
+
+.input:focus {
+  border-color: var(--vscode-focusBorder);
+  outline: none;
+}
+
+.input::placeholder {
+  opacity: 0.4;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 200px;
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+/* ================================
+   README SECTION
+   ================================ */
+.readme-section {
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: var(--radius);
+  background-color: rgba(139, 92, 246, 0.06);
+  border-left: 3px solid rgba(139, 92, 246, 0.5);
+}
+
+.readme-label {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.readme-preview {
+  font-size: 12px;
+  opacity: 0.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ================================
+   UTILITIES
+   ================================ */
+.text-muted {
+  opacity: 0.6;
+}
+
+.text-success {
+  color: #4ade80;
+}
+
+.text-danger {
+  color: #f87171;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ================================
+   RULE DETAIL VIEW
+   ================================ */
+.rule-detail-view {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-foreground);
+}
+
+.rule-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.rule-detail-title h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.rule-detail-path {
+  font-size: 11px;
+  opacity: 0.5;
+  font-family: monospace;
+  margin-top: 4px;
+  display: block;
+}
+
+.rule-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.unsaved-indicator {
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Metadata Section */
+.rule-detail-metadata {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.rule-detail-metadata h2 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  margin: 0 0 16px 0;
+}
+
+.metadata-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.metadata-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metadata-field label {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.metadata-field input[type="text"] {
+  padding: 10px 12px;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: inherit;
+  transition: border-color 150ms ease;
+}
+
+.metadata-field input[type="text"]:focus {
+  outline: none;
+  border-color: var(--vscode-focusBorder, #007acc);
+}
+
+.metadata-field input[type="text"]::placeholder {
+  opacity: 0.4;
+}
+
+.metadata-field--checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.metadata-field--checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--vscode-focusBorder, #007acc);
+}
+
+.field-hint {
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+/* Content Section */
+.rule-detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  min-height: 0;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.content-header h2 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.view-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.view-toggle-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0.6;
+  transition: all 150ms ease;
+}
+
+.view-toggle-btn:hover {
+  opacity: 0.8;
+}
+
+.view-toggle-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 1;
+}
+
+.content-editor {
+  flex: 1;
+  min-height: 300px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Override MD Editor styles for dark mode */
+.content-editor .w-md-editor {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px !important;
+}
+
+.content-editor .w-md-editor-toolbar {
+  background: rgba(0, 0, 0, 0.15) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.content-editor .w-md-editor-text-pre,
+.content-editor .w-md-editor-text-input,
+.content-editor .w-md-editor-text {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+.content-editor .w-md-editor-preview {
+  padding: 16px !important;
+}
+
+.content-editor .wmde-markdown {
+  background: transparent !important;
+  font-size: 13px !important;
+}
+
+/* Raw Editor */
+.raw-editor {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  padding: 16px;
+  font-size: 13px;
+  font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
+  line-height: 1.6;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: inherit;
+  resize: none;
+}
+
+.raw-editor:focus {
+  outline: none;
+  border-color: var(--vscode-focusBorder, #007acc);
+}

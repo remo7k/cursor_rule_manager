@@ -1,0 +1,27 @@
+{
+  "name": "rule-manager-webview",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "bun run build.ts",
+    "dev": "bun run build.ts --watch",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "bytemd": "^1.21.0",
+    "@bytemd/plugin-gfm": "^1.21.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.24.0",
+    "esbuild-svelte": "^0.8.2",
+    "postcss": "^8.4.49",
+    "svelte": "^4.2.19",
+    "svelte-check": "^4.1.1",
+    "svelte-preprocess": "^6.0.3",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "node esbuild.js && cd webview-ui && ~/.bun/bin/bun run build.ts",
+      "problemMatcher": ["$tsc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "watch",
+      "type": "shell",
+      "command": "node esbuild.js --watch & cd webview-ui && ~/.bun/bin/bun run build.ts --watch",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "watch:extension",
+      "type": "shell",
+      "command": "node esbuild.js --watch",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true
+    },
+    {
+      "label": "watch:webview",
+      "type": "shell",
+      "command": "cd webview-ui && ~/.bun/bin/bun run build.ts --watch",
+      "problemMatcher": [],
+      "isBackground": true
+    }
+  ]
+}

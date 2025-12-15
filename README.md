@@ -1,6 +1,6 @@
 # Cursor Rule Manager
 
-A VS Code extension for Cursor that provides a visual interface to manage AI context rules and documentation. Instead of manually editing `.cursorrules` files or hunting through multiple rule locations, you get a unified GUI to view, create, organize, and generate rules from all sources.
+A VS Code extension for Cursor that provides a visual interface to manage AI context rules and documentation. Instead of hunting through multiple rule locations, you get a unified GUI to view, create, and organize rules from all sources.
 
 ## Why Use This?
 
@@ -11,16 +11,14 @@ When working with Cursor AI, context rules can come from multiple places:
 - Global rules in `~/.cursor/rules/`
 - Documentation you want the AI to reference
 
-This extension gives you a single dashboard to see everything, toggle what's active, and generate a combined `.cursorrules` file with one click.
+This extension gives you a single dashboard to see everything and manage what's active.
 
 ## Features
 
 - **Unified Rules Overview**: See ALL rules affecting your project from every source in one place
-- **Docs Manager**: Add documentation files to `.cursor/docs/` and toggle which ones to include
 - **Rules Manager**: Create, edit, and delete custom project rules with frontmatter support
 - **GitHub Docs Scraper**: Download documentation directly from any GitHub repo folder as rules
-- **One-Click Generate**: Combine enabled docs and rules into a single `.cursorrules` file
-- **Live Preview**: Preview rule content before generating
+- **Live Preview**: Preview rule content
 
 ## Installation
 
@@ -67,13 +65,9 @@ This creates `cursor-rule-manager-0.1.0.vsix` in the project root. Share this fi
 
 3. **Navigate the tabs**:
    - **Manager**: See all rules, toggle docs/rules on/off
-   - **Preview**: View rule content before generating
+   - **Preview**: View rule content
 
-4. **Add documentation** by placing `.md` files in `.cursor/docs/` in your project
-
-5. **Add custom rules** by creating `.md` files in `.cursor/rules/`
-
-6. **Click "Generate"** to create/update your `.cursorrules` file from enabled sources
+4. **Add custom rules** by creating `.md` files in `.cursor/rules/`
 
 ## Scraping Docs from GitHub
 
@@ -104,14 +98,11 @@ When using this extension, your projects can have this structure:
 ```
 your-project/
 ├── .cursor/
-│   ├── docs/           # Documentation to include in context
-│   │   ├── nextjs-15.md
-│   │   └── prisma.md
 │   ├── rules/          # Project-specific rules
 │   │   ├── typescript.md
 │   │   └── testing.md
 │   └── config.json     # Toggle state (auto-managed by extension)
-└── .cursorrules        # Generated output (don't edit manually)
+└── .cursorrules        # Your project rules
 ```
 
 ## Development

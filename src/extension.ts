@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { SidebarProvider } from "./providers/SidebarProvider";
 import { PreviewPanelProvider } from "./providers/PreviewPanelProvider";
-import { generateCursorRules } from "./utils/generator";
 import { DocsScraperService } from "./services/DocsScraperService";
 import type { RuleFile } from "./services/RulesService";
 
@@ -22,23 +21,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("ruleManager.refresh", () => {
       sidebarProvider.refresh();
-    }),
-  );
-
-  // Register generate command
-  context.subscriptions.push(
-    vscode.commands.registerCommand("ruleManager.generate", async () => {
-      try {
-        await generateCursorRules();
-        vscode.window.showInformationMessage(
-          ".cursorrules file generated successfully!",
-        );
-        sidebarProvider.refresh();
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          `Failed to generate .cursorrules: ${error}`,
-        );
-      }
     }),
   );
 

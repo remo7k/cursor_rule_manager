@@ -44,7 +44,6 @@ export interface AppState {
 type MessageType =
   | { type: "init"; data: AppState }
   | { type: "error"; message: string }
-  | { type: "generated"; success: boolean }
   | { type: "refresh" };
 
 const emptyRulesData: RulesData = {
@@ -87,7 +86,6 @@ function createVSCodeStore() {
   return {
     subscribe,
     init,
-    generate: () => vscodeApi.postMessage({ type: "generate" }),
     openFile: (path: string) =>
       vscodeApi.postMessage({ type: "openFile", path }),
     openManager: () => vscodeApi.postMessage({ type: "openManager" }),
@@ -101,4 +99,3 @@ export const loading = derived(vscode, ($vscode) => $vscode.loading);
 export const projectData = derived(vscode, ($vscode) => $vscode.projectData);
 export const globalData = derived(vscode, ($vscode) => $vscode.globalData);
 export const config = derived(vscode, ($vscode) => $vscode.config);
-

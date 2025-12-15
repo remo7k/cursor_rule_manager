@@ -3,7 +3,6 @@ import { RulesService } from "../services/RulesService";
 import { GlobalRulesService } from "../services/GlobalRulesService";
 import { ConfigService } from "../services/ConfigService";
 import { DocsScraperService } from "../services/DocsScraperService";
-import { generateCursorRules } from "../utils/generator";
 import type { StorageLocation } from "../scrapers/types";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
@@ -42,10 +41,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       switch (message.type) {
         case "getInitialData":
           await this._sendInitialData();
-          break;
-
-        case "generate":
-          await this._generate();
           break;
 
         case "openFile":
@@ -170,24 +165,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       this._view?.webview.postMessage({
         type: "error",
         message: `Failed to refresh data: ${error}`,
-      });
-    }
-  }
-
-  private async _generate() {
-    try {
-      await generateCursorRules();
-      this._view?.webview.postMessage({
-        type: "generated",
-        success: true,
-      });
-      vscode.window.showInformationMessage(
-        ".cursorrules generated successfully!",
-      );
-    } catch (error) {
-      this._view?.webview.postMessage({
-        type: "error",
-        message: `Failed to generate: ${error}`,
       });
     }
   }

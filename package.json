@@ -45,11 +45,6 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "ruleManager.generate",
-        "title": "Generate .cursorrules",
-        "icon": "$(file-code)"
-      },
-      {
         "command": "ruleManager.scrapeDocs",
         "title": "Scrape Documentation",
         "icon": "$(cloud-download)"

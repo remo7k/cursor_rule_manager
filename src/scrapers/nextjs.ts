@@ -44,3 +44,4 @@ export const nextjsConfig: DocsSourceConfig = {
     { pattern: "optimizing", globs: "*.tsx, *.jsx, *.ts, *.js" },
   ],
 };
+

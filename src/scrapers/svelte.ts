@@ -54,3 +54,4 @@ export const svelteConfig: DocsSourceConfig = {
     { pattern: "hooks", globs: "hooks.server.ts, hooks.client.ts, hooks.ts" },
   ],
 };
+

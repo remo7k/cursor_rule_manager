@@ -44,3 +44,4 @@ export interface ScrapeProgress {
 }
 
 export type StorageLocation = "global" | "project";
+

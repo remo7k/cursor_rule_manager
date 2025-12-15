@@ -35,3 +35,4 @@ export const reactConfig: DocsSourceConfig = {
     { pattern: "server", globs: "*.jsx, *.tsx" },
   ],
 };
+

@@ -248,3 +248,4 @@ export const allRules = derived(manager, ($manager) => {
 export const enabledRuleIds = derived(manager, ($manager) => {
   return new Set($manager.config.enabledRules);
 });
+

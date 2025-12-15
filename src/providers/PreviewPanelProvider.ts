@@ -182,3 +182,4 @@ export class PreviewPanelProvider {
     return text;
   }
 }
+

@@ -38,3 +38,4 @@ export const typescriptConfig: DocsSourceConfig = {
     { pattern: "JSX", globs: "*.tsx, *.jsx" },
   ],
 };
+

@@ -142,6 +142,11 @@ function createManagerStore() {
     vscodeApi.postMessage({ type: "openFile", path });
   }
 
+  function openPreview(rule: RuleFile) {
+    console.log("openPreview called with rule:", rule);
+    vscodeApi.postMessage({ type: "openPreview", rule });
+  }
+
   function createRule(folderPath: string) {
     vscodeApi.postMessage({ type: "createRule", folderPath });
   }
@@ -197,6 +202,7 @@ function createManagerStore() {
     toggleFolder,
     toggleRootRules,
     openFile,
+    openPreview,
     createRule,
     createRootRule,
     deleteRule,

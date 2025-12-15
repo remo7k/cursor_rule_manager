@@ -78,7 +78,6 @@
     transition: all 150ms ease;
     text-align: left;
     color: inherit;
-    height: auto;
   }
 
   .rule-card:hover {
@@ -110,8 +109,6 @@
     gap: 6px;
     opacity: 0;
     transition: opacity 150ms ease;
-    top: -4px;
-    position: relative;
   }
 
   .rule-card:hover .rule-actions {

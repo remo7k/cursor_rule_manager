@@ -3,12 +3,10 @@
   import type { RuleFile } from "../stores/vscode";
   import FolderCard from "../components/FolderCard.svelte";
   import RootRulesCard from "../components/RootRulesCard.svelte";
-  import RulePreview from "../components/RulePreview.svelte";
   import DocsSection from "../components/DocsSection.svelte";
 
   $: projectData = $manager.projectData;
   $: globalData = $manager.globalData;
-  $: selectedRule = $manager.selectedRule;
   $: docsSources = $manager.docsSources;
   $: scraping = $manager.scraping;
   $: scrapeProgress = $manager.scrapeProgress;
@@ -32,8 +30,9 @@
     manager.toggleRootRules(source, enabled);
   }
 
-  function handleSelectRule(rule: RuleFile) {
-    manager.selectRule(rule);
+  function handleOpenRule(rule: RuleFile) {
+    // Open the preview panel with this rule
+    manager.openPreview(rule);
   }
 
   function handleAddRule(folderPath: string) {
@@ -45,182 +44,150 @@
   }
 
   function handleDeleteRule(rulePath: string) {
-    // Delegate confirmation to extension
     manager.deleteRule(rulePath);
   }
 
   function handleDeleteFolder(folderPath: string) {
-    // Delegate confirmation to extension
     manager.deleteFolder(folderPath);
   }
 
   function handleCreateFolder(source: "project" | "global") {
-    // Delegate input to extension's showInputBox
     manager.createFolder(source);
-  }
-
-  function handleRuleUpdate(path: string, content: string) {
-    manager.updateRule(path, content);
   }
 </script>
 
 <div class="manager-container">
-  <div class="manager-sidebar">
-    <div class="manager-header">
-      <h1>Rule Manager</h1>
-      <p class="manager-subtitle">Manage your Cursor rules</p>
-    </div>
-
-    <div class="rules-list">
-      <!-- Docs Section -->
-      <DocsSection
-        sources={docsSources}
-        {scraping}
-        {scrapeProgress}
-        globalFolders={globalData.folders}
-        projectFolders={projectData.folders}
-        enabledRuleIds={$enabledRuleIds}
-        selectedRuleId={selectedRule?.id ?? null}
-        onSelectRule={handleSelectRule}
-        onToggleRule={handleToggleRule}
-        onDeleteRule={handleDeleteRule}
-        onToggleFolder={handleToggleFolder}
-        onDeleteFolder={handleDeleteFolder}
-        onAddRule={handleAddRule}
-      />
-
-      <!-- Global Rules -->
-      <div class="rules-section">
-        <div class="section-header">
-          <h2 class="section-title">Global Rules</h2>
-          <button
-            class="section-add-btn"
-            on:click={() => handleCreateFolder("global")}
-            title="Create folder"
-          >
-            + Folder
-          </button>
-        </div>
-
-        {#each globalRuleFolders as folder (folder.id)}
-          <FolderCard
-            {folder}
-            enabledRuleIds={$enabledRuleIds}
-            selectedRuleId={selectedRule?.id ?? null}
-            onToggleFolder={handleToggleFolder}
-            onToggleRule={handleToggleRule}
-            onSelectRule={handleSelectRule}
-            onAddRule={handleAddRule}
-            onDeleteRule={handleDeleteRule}
-            onDeleteFolder={handleDeleteFolder}
-            initialExpanded={true}
-          />
-        {/each}
-
-        <RootRulesCard
-          rules={globalData.rootRules}
-          label="Root Rules"
-          enabledRuleIds={$enabledRuleIds}
-          selectedRuleId={selectedRule?.id ?? null}
-          onToggleAll={(enabled) => handleToggleRootRules("global", enabled)}
-          onToggleRule={handleToggleRule}
-          onSelectRule={handleSelectRule}
-          onAddRule={() => handleAddRootRule("global")}
-          onDeleteRule={handleDeleteRule}
-          initialExpanded={false}
-        />
-      </div>
-
-      <!-- Project Rules -->
-      <div class="rules-section">
-        <div class="section-header">
-          <h2 class="section-title">Project Rules</h2>
-          <button
-            class="section-add-btn"
-            on:click={() => handleCreateFolder("project")}
-            title="Create folder"
-          >
-            + Folder
-          </button>
-        </div>
-
-        {#each projectRuleFolders as folder (folder.id)}
-          <FolderCard
-            {folder}
-            enabledRuleIds={$enabledRuleIds}
-            selectedRuleId={selectedRule?.id ?? null}
-            onToggleFolder={handleToggleFolder}
-            onToggleRule={handleToggleRule}
-            onSelectRule={handleSelectRule}
-            onAddRule={handleAddRule}
-            onDeleteRule={handleDeleteRule}
-            onDeleteFolder={handleDeleteFolder}
-            initialExpanded={false}
-          />
-        {/each}
-
-        <RootRulesCard
-          rules={projectData.rootRules}
-          label="Root Rules"
-          enabledRuleIds={$enabledRuleIds}
-          selectedRuleId={selectedRule?.id ?? null}
-          onToggleAll={(enabled) => handleToggleRootRules("project", enabled)}
-          onToggleRule={handleToggleRule}
-          onSelectRule={handleSelectRule}
-          onAddRule={() => handleAddRootRule("project")}
-          onDeleteRule={handleDeleteRule}
-          initialExpanded={false}
-        />
-      </div>
-    </div>
+  <div class="manager-header">
+    <h1>Rule Manager</h1>
+    <p class="manager-subtitle">Manage your Cursor rules</p>
   </div>
 
-  <div class="manager-content">
-    {#if selectedRule}
-      <RulePreview
-        rule={selectedRule}
-        onOpenFile={manager.openFile}
-        onRuleUpdate={handleRuleUpdate}
-      />
-    {:else}
-      <div class="no-selection">
-        <p>Select a rule to preview</p>
-        <p class="hint">Click on any rule in the list to see its content</p>
+  <div class="rules-list">
+    <!-- Docs Section -->
+    <DocsSection
+      sources={docsSources}
+      {scraping}
+      {scrapeProgress}
+      globalFolders={globalData.folders}
+      projectFolders={projectData.folders}
+      enabledRuleIds={$enabledRuleIds}
+      selectedRuleId={null}
+      onSelectRule={handleOpenRule}
+      onToggleRule={handleToggleRule}
+      onDeleteRule={handleDeleteRule}
+      onToggleFolder={handleToggleFolder}
+      onDeleteFolder={handleDeleteFolder}
+      onAddRule={handleAddRule}
+    />
+
+    <!-- Global Rules -->
+    <div class="rules-section">
+      <div class="section-header">
+        <h2 class="section-title">Global Rules</h2>
+        <button
+          class="section-add-btn"
+          on:click={() => handleCreateFolder("global")}
+          title="Create folder"
+        >
+          + Folder
+        </button>
       </div>
-    {/if}
+
+      {#each globalRuleFolders as folder (folder.id)}
+        <FolderCard
+          {folder}
+          enabledRuleIds={$enabledRuleIds}
+          selectedRuleId={null}
+          onToggleFolder={handleToggleFolder}
+          onToggleRule={handleToggleRule}
+          onSelectRule={handleOpenRule}
+          onAddRule={handleAddRule}
+          onDeleteRule={handleDeleteRule}
+          onDeleteFolder={handleDeleteFolder}
+          initialExpanded={true}
+        />
+      {/each}
+
+      <RootRulesCard
+        rules={globalData.rootRules}
+        label="Root Rules"
+        enabledRuleIds={$enabledRuleIds}
+        selectedRuleId={null}
+        onToggleAll={(enabled) => handleToggleRootRules("global", enabled)}
+        onToggleRule={handleToggleRule}
+        onSelectRule={handleOpenRule}
+        onAddRule={() => handleAddRootRule("global")}
+        onDeleteRule={handleDeleteRule}
+        initialExpanded={false}
+      />
+    </div>
+
+    <!-- Project Rules -->
+    <div class="rules-section">
+      <div class="section-header">
+        <h2 class="section-title">Project Rules</h2>
+        <button
+          class="section-add-btn"
+          on:click={() => handleCreateFolder("project")}
+          title="Create folder"
+        >
+          + Folder
+        </button>
+      </div>
+
+      {#each projectRuleFolders as folder (folder.id)}
+        <FolderCard
+          {folder}
+          enabledRuleIds={$enabledRuleIds}
+          selectedRuleId={null}
+          onToggleFolder={handleToggleFolder}
+          onToggleRule={handleToggleRule}
+          onSelectRule={handleOpenRule}
+          onAddRule={handleAddRule}
+          onDeleteRule={handleDeleteRule}
+          onDeleteFolder={handleDeleteFolder}
+          initialExpanded={false}
+        />
+      {/each}
+
+      <RootRulesCard
+        rules={projectData.rootRules}
+        label="Root Rules"
+        enabledRuleIds={$enabledRuleIds}
+        selectedRuleId={null}
+        onToggleAll={(enabled) => handleToggleRootRules("project", enabled)}
+        onToggleRule={handleToggleRule}
+        onSelectRule={handleOpenRule}
+        onAddRule={() => handleAddRootRule("project")}
+        onDeleteRule={handleDeleteRule}
+        initialExpanded={false}
+      />
+    </div>
   </div>
 </div>
 
 <style>
   .manager-container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
     background: var(--vscode-editor-background);
     color: var(--vscode-foreground);
   }
 
-  .manager-sidebar {
-    width: 340px;
-    min-width: 300px;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
   .manager-header {
-    padding: 20px;
+    padding: 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .manager-header h1 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     margin: 0;
   }
 
   .manager-subtitle {
-    font-size: 12px;
+    font-size: 11px;
     opacity: 0.6;
     margin: 4px 0 0;
   }
@@ -267,31 +234,5 @@
   .section-add-btn:hover {
     opacity: 1;
     background: rgba(255, 255, 255, 0.1);
-  }
-
-  .manager-content {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .no-selection {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.5;
-  }
-
-  .no-selection p {
-    margin: 0;
-  }
-
-  .no-selection .hint {
-    font-size: 12px;
-    margin-top: 8px;
-    opacity: 0.6;
   }
 </style>

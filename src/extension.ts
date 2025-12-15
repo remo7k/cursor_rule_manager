@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import { SidebarProvider } from "./providers/SidebarProvider";
-import { ManagerPanelProvider } from "./providers/ManagerPanelProvider";
+import { PreviewPanelProvider } from "./providers/PreviewPanelProvider";
 import { generateCursorRules } from "./utils/generator";
 import { DocsScraperService } from "./services/DocsScraperService";
+import type { RuleFile } from "./services/RulesService";
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("Cursor Rule Manager is now active!");
@@ -41,11 +42,15 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
-  // Register open manager command
+  // Register open preview command
   context.subscriptions.push(
-    vscode.commands.registerCommand("ruleManager.openManager", () => {
-      ManagerPanelProvider.createOrShow(context.extensionUri);
-    }),
+    vscode.commands.registerCommand(
+      "ruleManager.openPreview",
+      (rule: RuleFile) => {
+        console.log("openPreview command called with rule:", rule);
+        PreviewPanelProvider.createOrShow(context.extensionUri, rule);
+      },
+    ),
   );
 
   // Register scrape docs command
@@ -86,12 +91,12 @@ export function activate(context: vscode.ExtensionContext) {
       const locationItems = [
         {
           label: "Global",
-          description: "~/.cursor/rules/docs/ - Available in all projects",
+          description: "~/.cursor/rules/ - Available in all projects",
           id: "global" as const,
         },
         {
           label: "Project",
-          description: ".cursor/rules/docs/ - Only this project",
+          description: ".cursor/rules/ - Only this project",
           id: "project" as const,
         },
       ];

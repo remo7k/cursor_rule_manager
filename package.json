@@ -50,11 +50,6 @@
         "icon": "$(file-code)"
       },
       {
-        "command": "ruleManager.openManager",
-        "title": "Open Rule Manager",
-        "icon": "$(file-directory)"
-      },
-      {
         "command": "ruleManager.scrapeDocs",
         "title": "Scrape Documentation",
         "icon": "$(cloud-download)"

@@ -2,6 +2,8 @@
 
 A VS Code extension for Cursor that provides a visual interface to manage AI context rules and documentation. Instead of hunting through multiple rule locations, you get a unified GUI to view, create, and organize rules from all sources.
 
+![rule manager image](https://github.com/remo7k/cursor_rule_manager/blob/main/img/rule_manager.png?raw=true)
+
 ## Why Use This?
 
 When working with Cursor AI, context rules can come from multiple places:
